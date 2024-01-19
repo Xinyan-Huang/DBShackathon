@@ -16,7 +16,7 @@ $ node initializeDB.js (create database with sample data)
 $ node index.js --> 'Server up and running... on port 5001' if successful
 ```
 
-## Frontend
+## frontend
 ```bash
 #New terminal
 $ cd frontend
@@ -24,7 +24,7 @@ $ npm install
 $ npm start
 ```
 
-## MySql
+## MySQL
 ```bash
 # 1. Ensure that the service is working. troubleshoot Windows+R enter service.msc and check that MySql server is running
 # 1. enter server and create schema 'dday' (else change the code in backend in db.js)
