@@ -19,6 +19,7 @@ $ node index.js --> 'Server up and running... on port 5001' if successful
 ## Frontend
 ```bash
 #New terminal
+$ cd frontend
 $ npm install
 $ npm start
 ```
