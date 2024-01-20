@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     db.query(
-      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['cost']}, ${req.body['name']}, '${req.body['notes']}')`,
+      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['cost']}, '${req.body['name']}', '${req.body['notes']}')`,
       function (err, dest) {
         if (err) console.log(err);
         console.log(dest);
@@ -33,11 +33,11 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     db.query(
-      `UPDATE destination SET (country_id=${req.body['country_id']}, cost=${req.body['cost']}, name='${req.body['name']}', notes='${req.body['notes']}') WHERE id=${req.params['id']}`,
+      `UPDATE destination SET country_id = ${req.body['country_id']}, cost = ${req.body['cost']}, name = ${req.body['name']}, notes = '${req.body['notes']}' WHERE id=${req.params['id']}`,
       function (err, dest) {
         if (err) console.log(err);
         console.log(dest);
-        return res.status(200).json('Destination was inserted.');
+        res.status(200).json(`Destination updated in DB`);
       },
     );
   } catch (error) {
