@@ -7,6 +7,8 @@ app.use(express.json());
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require("mysql");
+const mysql = require('mysql');
+const destinationRouter = require('./src/routes/DestinationRouter');
 
 //authentication
 function authenticate(req, res, next) {
@@ -23,6 +25,8 @@ function authenticate(req, res, next) {
     });
 }
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use('/router/destination', destinationRouter);
 app.use(cookieParser());
 
 //Backend Listens to port 5001, your axios calls should be localhost:5001

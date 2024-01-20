@@ -18,6 +18,7 @@ const select = async (query) => {
   await new Promise((resolve, reject) => {
     db.query(query, (err, result) => {
       if (err) return reject(err);
+      console.log(result);
       resolve(result);
     });
   });
@@ -51,16 +52,16 @@ router.post('/', async (req, res) => {
     console.log('inside');
     const destinationData = req.body;
     console.log(destinationData);
-    // if (
-    //   !!destinationData.country_id ||
-    //   !!destinationData.cost ||
-    //   !!destinationData.name ||
-    //   destinationData.notes
-    // ) {
-    //   return res.status(500).json({
-    //     error: 'Inputed data does not comply with destination data model',
-    //   });
-    // }
+    if (
+      !!destinationData.country_id ||
+      !!destinationData.cost ||
+      !!destinationData.name ||
+      !!destinationData.notes
+    ) {
+      return res.status(500).json({
+        error: 'Inputed data does not comply with destination data model',
+      });
+    }
     const newDestination = await createDestination(destinationData);
     return res.status(200).json(newDestination);
   } catch (error) {
