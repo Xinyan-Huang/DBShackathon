@@ -168,25 +168,17 @@ const Account = () => {
             value={transferData.receiverAccount}
             onChange={(e) => setTitle(e.target.value)}
           />
-          <InputLabel id="demo-simple-select-label">Country</InputLabel>
-          
-          <Select
-            labelId='demo-simple-select-label'
-            id='country'
+          <TextField
+            margin="dense"
+            id="country"
             label="Country"
+            type="text"
             fullWidth
-            variant='outlined'
-            value={selectedCountry}
-            onChange={(e) => handleSelectedCountry}
-          >
-            {countryList && countryList.map((element) => {
-              console.log(element.name);
-              <MenuItem value={element.id}>{element.name}</MenuItem>
-            })}
-            {/* <MenuItem value={'singapore'}>Singapore</MenuItem> */}
-          </Select>
+            variant="outlined"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+          />
 
-          
           <TextField
             margin="dense"
             id="budget"
