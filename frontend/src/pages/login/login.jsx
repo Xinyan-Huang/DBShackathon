@@ -40,17 +40,17 @@ const Login = () => {
     console.log("email:", email);
     console.log("password:", password);
     try {
-      const response = await axios.post("http://localhost:5001/verifyUser", {
+      const response = await axios.post("http://localhost:5001/login", {
         email: email,
         password: password,
       });
-      console.log("response,", response.request.status);
       console.log(response);
-      console.log("successful verification");
-      localStorage.setItem('jwtToken', response.data.token);
+      // localStorage.setItem('jwtToken', response.data.token);  // Only use for if remember me is selected.
+      sessionStorage.setItem('jwtToken', response.data.token);
       setJwtToken(response.data.token);
       console.log(jwtToken);
       setErrorLogin("");
+      console.log("navigating..")
       navigate("/account");
     } catch (error) {
       setErrorLogin("Email or Password incorrect");

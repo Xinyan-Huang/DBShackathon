@@ -4,7 +4,7 @@ const { authenticate } = require('../../generateAccessToken')
 
 const router = express.Router();
 
-router.get('/getItinerary', authenticate, (req, res) => {
+router.get('/', authenticate, (req, res) => {
     db.query(`SELECT * FROM itinerary WHERE id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries)
@@ -12,7 +12,7 @@ router.get('/getItinerary', authenticate, (req, res) => {
     });
 })
 
-router.post('/addItinerary', (req, res) => {
+router.post('/', (req, res) => {
     console.log(req.body['user'])
 
     db.query(`INSERT INTO itinerary (country_id, user_id, budget, title) VALUES (${req.body['country_id']}, ${req.body['user_id']}, ${req.body['budget']}, '${req.body['title']}')`, function (err, db_itineraries) {
@@ -22,7 +22,7 @@ router.post('/addItinerary', (req, res) => {
     });
 })
 
-router.put('/updateItinerary', (req, res) => {
+router.put('/', (req, res) => {
     db.query(`UPDATE itinerary SET country_id = ${req.body['country_id']}, user_id = ${req.body['user_id']}, budget = ${req.body['budget']}, title = '${req.body['title']}' WHERE id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries);
@@ -30,7 +30,7 @@ router.put('/updateItinerary', (req, res) => {
     });
 })
 
-router.delete('/deleteItinerary', (req, res) => {
+router.delete('/', (req, res) => {
     db.query(`DELETE FROM itinerary_destination WHERE itinerary_id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries);
