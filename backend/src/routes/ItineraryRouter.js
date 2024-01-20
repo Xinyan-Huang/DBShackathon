@@ -24,7 +24,7 @@ router.post('/', authenticate, (req, res) => {
 })
 
 router.put('/', authenticate, (req, res) => {
-    db.query(`UPDATE itinerary SET country_id = ${req.body['country_id']}, user_id = ${req.body['user_id']}, budget = ${req.body['budget']}, title = '${req.body['title']}' WHERE id=${req.body['id']}`, function (err, db_itineraries) {
+    db.query(`UPDATE itinerary SET country_id = ${req.body['countryId']}, budget = ${req.body['budget']}, title = '${req.body['title']}' WHERE id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries);
         res.send(`Itinerary updated in DB`);
