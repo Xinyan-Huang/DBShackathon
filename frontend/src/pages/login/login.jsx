@@ -40,7 +40,7 @@ const Login = () => {
     console.log("email:", email);
     console.log("password:", password);
     try {
-      const response = await axios.post("http://localhost:5001/verifyUser", {
+      const response = await axios.post("http://localhost:5001/login", {
         email: email,
         password: password,
       });

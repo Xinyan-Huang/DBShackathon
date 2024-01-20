@@ -3,7 +3,7 @@ const mysql = require('mysql');
 
 const router = express.Router();
 
-router.get('/getItinerary', (req, res) => {
+router.get('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -26,7 +26,7 @@ router.get('/getItinerary', (req, res) => {
     });
 })
 
-router.post('/addItinerary', (req, res) => {
+router.post('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -49,7 +49,7 @@ router.post('/addItinerary', (req, res) => {
     });
 })
 
-router.put('/updateItinerary', (req, res) => {
+router.put('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -70,7 +70,7 @@ router.put('/updateItinerary', (req, res) => {
     });
 })
 
-router.delete('/deleteItinerary', (req, res) => {
+router.delete('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -90,6 +90,27 @@ router.delete('/deleteItinerary', (req, res) => {
             if (err) console.log(err);
             console.log(db_itineraries);
             res.send(`Itinerary deleted in DB`);
+            
+            con.end();
+        })
+    });
+})
+
+router.post('/itinerarydb', (req, res) => {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "password",
+        database: 'techtrek24'
+    });
+
+    con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected to DB")
+        con.query(`INSERT INTO itinerary_destination (destination_id, itinerary_id) VALUES (${req.body['destination_id']}, ${req.body['itinerary_id']}) `, function (err, db_itineraries) {
+            if (err) console.log(err);
+            console.log(db_itineraries);
+            res.send(`Itinerary updated in DB`);
             
             con.end();
         })
