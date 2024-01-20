@@ -1,71 +1,202 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useAuth } from '../../Auth';
-import { Grid, Box, Typography } from '@mui/material';
-import { MaterialReactTable } from 'material-react-table';
-import { backgroundImage } from '../image';
-const Page1 = () => {
-  const jwtToken = useAuth();
-  const [dashboardData, setDashboardData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+import React, { useEffect, useState } from "react"
+import { MaterialReactTable } from "material-react-table"
+import { Grid, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, Input } from "@mui/material"
+import axios from "axios"
+import { Snackbar, Alert } from "@mui/material"
+import { useAuth } from "../../Auth"
+import { backgroundImage, loginImage } from "../image"
+import { styled } from "@mui/system"
+const Account = () => {
+  const jwtToken = useAuth()
+  const [accounts, setAccounts] = useState([])
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [transferData, setTransferData] = useState({ senderAccount: "", receiverAccount: "", value: 0 })
+  const [error, setError] = useState("")
+  const [openSnackbar, setOpenSnackbar] = useState(false)
 
-  const fetchDashboardData = async () => {
-    setLoading(true);
-    setError('');
+  // Function to fetch account data
+  const fetchAccounts = async () => {
     try {
-      const response = await axios.get('http://localhost:5001/dashboard/3', { // Replace with your correct endpoint
+      const response = await axios.get("http://localhost:5001/getAccount", {
         headers: {
-          'Authorization': `Bearer ${jwtToken}`
+          Authorization: `Bearer ${jwtToken}` // Assuming a Bearer token, modify as needed
         }
-      });
-      setDashboardData(response.data);
+      })
+      setAccounts(response.data)
+      console.log(response)
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      setError('Failed to fetch dashboard data');
-    } finally {
-      setLoading(false);
+      console.error("Error fetching accounts:", error)
     }
-  };
-  const columns = [
-    { accessorKey: 'recordId', header: 'Record Id' },
-    { accessorKey: 'item1', header: 'Item 1' },
-    { accessorKey: 'item2', header: 'Item 2' },
-    { accessorKey: 'item3', header: 'Item 3' },
-    { accessorKey: 'item4', header: 'Item 4' },
-    { accessorKey: 'email', header: 'Email' },
-    // ... other columns as per your dashboard data structure
-  ];
+  }
+  // Function to transfer data
+  const handleTransferClick = account => {
+    setTransferData({ ...transferData, senderAccount: account.accountNumber })
+    setIsDialogOpen(true)
+  }
+
+  const handleTransfer = async () => {
+    try {
+      console.log(transferData)
+      const response = await axios.put("http://localhost:5001/transfer", transferData, {
+        headers: {
+          Authorization: `Bearer ${jwtToken}`
+        }
+      })
+
+      if (response.status === 200) {
+        setIsDialogOpen(false)
+        setTransferData({ senderAccount: "", receiverAccount: "", value: 0 })
+        setOpenSnackbar(true)
+        setTimeout(() => {
+          setOpenSnackbar(false) // Optionally hide alert after some time
+        }, 3000)
+        fetchAccounts()
+      } else {
+        setError("Transfer failed")
+      }
+    } catch (error) {
+      setError("Transfer failed: " + error.message)
+    }
+  }
+
+  const handleClose = () => {
+    setIsDialogOpen(false)
+    setError("")
+  }
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    fetchAccounts()
+  }, [])
+
+  const columns = [
+    {
+      accessorKey: "accountType",
+      header: "Destination"
+    },
+    {
+      accessorKey: "accountNumber",
+      header: "Cost"
+    },
+    {
+      accessorKey: "balance",
+      header: "Notes"
+    },
+    {
+      id: "actions",
+      header: "",
+      Cell: ({ row }) => (
+        <Grid container>
+          <Grid item xs={6} padding={1}>
+            <Button
+              variant="contained"
+              // onClick={() => handleTransferClick(row.original)}
+              size="small"
+            >
+              Delete
+            </Button>
+          </Grid>
+          <Grid item xs={6} padding={1}>
+            <Button variant="contained" onClick={() => handleTransferClick(row.original)} size="small">
+              Edit
+            </Button>
+          </Grid>
+        </Grid>
+      )
+    }
+  ]
 
   return (
-    <Grid container sx={{
-      height: '100vh',
-      width: '100%',
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundSize: 'cover',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
-      <Grid item xs={8}>
+    <Grid
+      container
+      sx={{
+        height: "100vh",
+        width: "100%",
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundSize: "cover",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <Grid item xs={8} sx={{}}>
         <MaterialReactTable
           columns={columns}
-          data={dashboardData}
+          data={accounts}
           renderTopToolbarCustomActions={() => (
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                Dashboard
-              </Typography>
-            </Box>
+            <Grid item xs={12} sx={{ pt: 1, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <Box sx={{ ml: 1, display: "flex", alignItems: "center" }}>
+                <Typography variant="h5" sx={{ fontWeight: "bold" }}>
+                  Destinations
+                </Typography>
+              </Box>
+            </Grid>
           )}
         />
       </Grid>
+      <Dialog open={isDialogOpen} onClose={handleClose}>
+        <DialogTitle>Edit Destinations</DialogTitle>
+        <DialogContent>
+          <Grid container spacing={12}>
+            {/* Left column content */}
+            <Grid item xs={12} md={12} style={{ paddingRight: "32px" }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="Country"
+                label="Country"
+                type="text"
+                fullWidth
+                style={{ marginBottom: "16px" }}
+                value={transferData.receiverAccount}
+                disabled
+                // value={newAppData.App_Acronym}
+              />
+              <Input
+                margin="dense"
+                name="Destination_Name"
+                label="Destination Name"
+                type="number"
+                fullWidth
+                value={transferData.receiverAccount}
+                // value={newAppData.App_Rnumber}
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="group-select-label-${appData.username}">Choose Destination</InputLabel>
+                <Select labelId="group-select-label-${appData.username}" name="App_permit_Open" value={transferData.receiverAccount || ""}>
+                  {/* {Array.isArray(groupOptions) &&
+                        groupOptions.map(opt => (
+                          <MenuItem key={opt} value={opt}>
+                            {opt}
+                          </MenuItem>
+                        ))} */}
+                </Select>
+              </FormControl>
+              <TextField
+                margin="dense"
+                name="App_Description"
+                label="Notes"
+                type="text"
+                fullWidth
+                multiline
+                rows={4}
+                value={transferData.receiverAccount || ""}
+                // onChange={e => handleChange("App_Description", e.target.value)}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleTransfer}>Edit</Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }} sx={{ zIndex: theme => theme.zIndex.tooltip }}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+          Transfer successfully!
+        </Alert>
+      </Snackbar>
     </Grid>
-  );
-};
+  )
+}
 
-export default Page1;
+export default Account
