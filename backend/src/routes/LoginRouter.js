@@ -29,4 +29,28 @@ router.post("/", async (req, res) => {
     });
 });
 
+router.post("/newUser", async (req, res) => {
+    console.log("Receiving my newUser: ", req.body);
+    const { firstName, lastName, username, password } = req.body;
+    if (!firstName || !lastName || !username || !password) {
+        return res.status(400).send('Missing name, email, or password');
+    }
+
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const sqlInsert = "INSERT INTO user (first_name, last_name, username, password) VALUES (?, ?, ?, ?)";
+        db.query(sqlInsert, [firstName, lastName, username, hashedPassword], (err, result) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Error while creating account');
+            }
+            console.log("--------> Created new User with ID:", result.insertId);
+            res.status(201).send('User created successfully');
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server error');
+    }
+})
+
 module.exports = router;
