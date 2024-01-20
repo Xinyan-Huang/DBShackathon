@@ -1,9 +1,11 @@
 const express = require("express");
-const db = require("../../db");
+const db = require('../../db');
+const { authenticate } = require('../../generateAccessToken')
+
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", authenticate, (req, res) => {
   console.log("POST Route");
   const user = req.body;
   console.log(user);

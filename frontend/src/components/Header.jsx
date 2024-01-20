@@ -50,7 +50,7 @@ const Header = () => {
     <header style={headerStyle} onMouseEnter={() => setIsExpanded(true)} onMouseLeave={() => setIsExpanded(false)}>
       <nav style={navStyle}>
         {renderLink('/account', AccountBoxIcon, 'Account')}
-        {renderLink('/page1', HomeIcon, 'Page 1')}
+        {renderLink('/destination', HomeIcon, 'Destination')}
         {renderLink('/page2', InfoIcon, 'Page 2')}
         {renderLink('/page3', ContactMailIcon, 'Page 3')}
         {renderLink('/logout', LogoutIcon, 'Logout')}
