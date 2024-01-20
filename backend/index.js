@@ -16,6 +16,7 @@ function authenticate(req, res, next) {
     console.log(auth)
     if (token == null) return res.sendStatus(401);
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        console.log("User is verified");
         if (err) return res.sendStatus(403);
         req.user = user;
         console.log(user, "user");
@@ -100,6 +101,7 @@ app.post("/createAccount", authenticate, (req, res) => {
 });
 
 app.get("/getAccount", authenticate, (req, res) => {
+    console.log("I am in my getAccount");
     const userId = req.user.userId;
 
     const sqlSelect = "SELECT * FROM accounts WHERE userId = ?";
@@ -130,7 +132,7 @@ app.put("/updateAccount", authenticate, (req, res) => {
     });
 });
 
-app.put("/transfer",authenticate, async (req, res) => {
+app.put("/transfer", authenticate, async (req, res) => {
     const { senderAccount, receiverAccount, value } = req.body;
     //const userId = req.user.userId;
 
