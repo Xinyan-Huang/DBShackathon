@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-router.post("/login", async (req, res) => {
+router.post("/", async (req, res) => {
     const { username, password } = req.body;
     const sqlSearch = "SELECT * FROM user WHERE username = ?";
     const search_query = mysql.format(sqlSearch, [username]);
