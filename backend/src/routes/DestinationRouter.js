@@ -1,8 +1,6 @@
 const express = require('express');
-const destinationService = require('../service/DestinationService');
 const router = express.Router();
 
-// const destinationService = new DestinationService();
 const db = require('../../db');
 
 router.get('/', async (req, res) => {
@@ -19,26 +17,51 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    const destinationData = req.body;
-    console.log(destinationData);
-    // if (
-    //   !!destinationData.country_id ||
-    //   !!destinationData.cost ||
-    //   !!destinationData.name ||
-    //   !!destinationData.notes
-    // ) {
-    //   return res.status(500).json({
-    //     error: 'Inputed data does not comply with destination data model',
-    //   });
-    // }
     db.query(
-      `INSERT INTO destination (country_id, cost, name, notes) VALUES ? ('${destinationData.country_id}, ${destinationData.cost}, ${destinationData.name}, ${destinationData.notes}')`,
-      function (err, createDestination) {
+      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['cost']}, ${req.body['name']}, '${req.body['notes']}')`,
+      function (err, dest) {
         if (err) console.log(err);
-        console.log(createDestination);
-        return res.status(200).json(createDestination);
+        console.log(dest);
+        return res.status(200).json('Destination was inserted.');
       },
     );
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  try {
+    db.query(
+      `UPDATE destination SET (country_id=${req.body['country_id']}, cost=${req.body['cost']}, name='${req.body['name']}', notes='${req.body['notes']}') WHERE id=${req.params['id']}`,
+      function (err, dest) {
+        if (err) console.log(err);
+        console.log(dest);
+        return res.status(200).json('Destination was inserted.');
+      },
+    );
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    db.query(
+      `DELETE FROM destination WHERE id=${req.params['id']}`,
+      function (err, destinations) {
+        if (err) console.log(err);
+        console.log(destinations);
+      },
+    );
+    db.query(
+      `DELETE FROM itinerary_destination WHERE destination_id=${req.params['id']}`,
+      function (err, destinations) {
+        if (err) console.log(err);
+        console.log(destinations);
+      },
+    );
+    return res.status(200).json('Destination Deleted');
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
