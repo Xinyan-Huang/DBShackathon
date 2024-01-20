@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavig
 import Login from './pages/login/login';
 import AuthProvider from './Auth';
 import Account from './pages/account/account';
-import Page1 from './pages/page1/page1';
+import DestinationDashboardPage from './pages/page1/page1';
 import Page2 from './pages/page2/page2';
 import Page3 from './pages/page3/page3';
 import Header from './components/Header';
@@ -45,7 +45,7 @@ function App() {
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route path="/login" element={<Login />} />
             <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
-            <Route path="/page1" element={<ProtectedRoute><Page1 /></ProtectedRoute>} />
+            <Route path="/destination" element={<ProtectedRoute><DestinationDashboardPage /></ProtectedRoute>} />
             <Route path="/page2" element={<ProtectedRoute><Page2 /></ProtectedRoute>} />
             <Route path="/page3" element={<ProtectedRoute><Page3 /></ProtectedRoute>} />
             <Route path="/logout" element={<ProtectedRoute><LogoutPage /></ProtectedRoute>} />

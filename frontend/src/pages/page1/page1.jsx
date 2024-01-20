@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../../Auth';
 import { backgroundImage, loginImage } from '../image';
-const Account = () => {
+const DestinationDashboardPage = () => {
   const jwtToken = useAuth();
   const [isDialogOpenDelete, setIsDialogOpenDelete] = useState(false);
   const [isDialogOpenEdit, setIsDialogOpenEdit] = useState(false);
@@ -17,10 +17,25 @@ const Account = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
-  const [createdestination, setcreatedestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
-  const [Editedestination, setEditdestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
+  const [createDestination, setCreateDestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
+  const [editDestination, setEditDestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
+  const [destinationResult, setDestinationResult] = useState([]);
 
-  // Function to fetch account data
+  // Function to fetch DestinationDashboardPage data
+
+  useEffect(() => {
+    axios.get("http://localhost:5001/destination").then((res) => {
+      setDestinationResult(res.data);
+    })
+  }, [])
+
+  const handleCreateDestination = () => {
+    console.log("zxc");
+  }
+
+  const handleTransfer = () => {
+    console.log("123");
+  }
 
 
   const handleDeleteClose = () => {
@@ -40,16 +55,16 @@ const Account = () => {
 
   const columns = [
     {
-      accessorKey: 'accountType',
+      accessorKey: 'name',
       header: 'Destination',
     },
     {
-      accessorKey: 'accountNumber',
-      header: 'Budget',
+      accessorKey: 'cost',
+      header: 'Cost',
     },
     {
-      accessorKey: 'balance',
-      header: 'notes',
+      accessorKey: 'notes',
+      header: 'Notes',
     },
     {
       id: 'actions',
@@ -92,17 +107,17 @@ const Account = () => {
       <Grid item xs={8} sx={{}}>
         <MaterialReactTable
           columns={columns}
-          data={''}
+          data={destinationResult}
           renderTopToolbarCustomActions={() => (
             <Grid item xs={12} sx={{ pt: 1, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <Box sx={{ ml: 1, display: "flex", alignItems: "center" }}>
                 <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                  Accounts
+                  Destination
                 </Typography>
               </Box>
-              <StyledButton sx={{ fontSize: theme.typography.p, mr: 1 }} onClick={() => setOpenCreate(true)}>
+              <Button onClick={() => setOpenCreate(true)}>
                 Create new destination
-              </StyledButton>
+              </Button>
             </Grid>
           )}
         />
@@ -119,8 +134,8 @@ const Account = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={createdestination.countryId}
-            onChange={(e) => setcreatedestination({ ...createdestination, countryId: e.target.value })}
+            value={createDestination.countryId}
+            onChange={(e) => setCreateDestination({ ...createDestination, countryId: e.target.value })}
           />
           <TextField
             margin="dense"
@@ -129,8 +144,8 @@ const Account = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={createdestination.name}
-            onChange={(e) => setcreatedestination({ ...createdestination, name: e.target.value })}
+            value={createDestination.name}
+            onChange={(e) => setCreateDestination({ ...createDestination, name: e.target.value })}
           />
           <TextField
             margin="dense"
@@ -139,8 +154,8 @@ const Account = () => {
             type="number"
             fullWidth
             variant="outlined"
-            value={createdestination.budget}
-            onChange={(e) => setcreatedestination({ ...createdestination, budget: parseFloat(e.target.value) || 0 })}
+            value={createDestination.budget}
+            onChange={(e) => setCreateDestination({ ...createDestination, budget: parseFloat(e.target.value) || 0 })}
           />
           <TextField
             margin="dense"
@@ -149,8 +164,8 @@ const Account = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={createdestination.notes}
-            onChange={(e) => setcreatedestination({ ...createdestination, notes: e.target.value })}
+            value={createDestination.notes}
+            onChange={(e) => setCreateDestination({ ...createDestination, notes: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
@@ -159,8 +174,8 @@ const Account = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog open={true} onClose={handleDeleteClose}>
-        <DialogTitle>Confirm Delete destination?</DialogTitle>
+      <Dialog open={isDialogOpenDelete} onClose={handleDeleteClose}>
+        <DialogTitle>Confirm Delete Destination?</DialogTitle>
         <DialogContent>
           <Button
             variant="contained"
@@ -213,4 +228,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default DestinationDashboardPage;
