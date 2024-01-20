@@ -1,0 +1,54 @@
+{
+    "Itineraries": [
+        {
+            "id": 1,
+            "country_id": 1,
+            "user_id": 1,
+            "budget": 500,
+            "title": "Sightseeing in Singapore",
+            "country": "Singapore",
+            "destinations": ["Marina Bay Sands, Gardens By The Bay"]
+          },
+          {
+            "id": 2,
+            "country_id": 1,
+            "user_id": 1,
+            "budget": 800,
+            "title": "Singapore Adventure",
+            "country": "Singapore",
+            "destinations": ["Marina Bay Sands, Gardens By The Bay"]
+
+          }
+
+      
+    ],
+    "Destinations": [
+        {
+            "id": 1,
+            "country_id": 1,
+            "cost": 1,
+            "name": "Marina Bay Sands",
+            "notes": "Iconic hotel with an infinity pool and stunning views of the city skyline. Open 24/7."
+          },
+          {
+            "id": 2,
+            "country_id": 1,
+            "cost": 30,
+            "name": 800,
+            "notes": "Gardens by the Bay', 'Futuristic park featuring Supertree Grove and Flower Dome conservatories. Open daily from 9 AM to 9 PM."
+          },
+          {
+            "id": 3,
+            "country_id": 1,
+            "cost": 2,
+            "name": 600,
+            "notes": "Sentosa Island', 'Fun-filled island resort with beaches, theme parks, and various attractions. Open daily from 10 AM to 7 PM."
+          }
+
+      
+    ]
+
+  }
+
+
+

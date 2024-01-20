@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
-import { Grid, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Grid, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, Input } from "@mui/material"
 import axios from 'axios';
 import { Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../../Auth';
@@ -24,7 +24,11 @@ const DestinationDashboardPage = () => {
   // Function to fetch DestinationDashboardPage data
 
   useEffect(() => {
-    axios.get("http://localhost:5001/destination").then((res) => {
+    axios.get("http://localhost:5001/destination", {
+      headers: {
+        Authorization: `Bearer ${jwtToken}` // Assuming a Bearer token, modify as needed
+      }
+    }).then((res) => {
       setDestinationResult(res.data);
     })
   }, [])
@@ -54,6 +58,9 @@ const DestinationDashboardPage = () => {
     setError('');
   };
 
+  const handleEditClick = () => {
+    setIsDialogOpenEdit(true)
+  }
   const handleEditClose = () => {
     setIsDialogOpenEdit(false);
     setError('');
@@ -103,7 +110,7 @@ const DestinationDashboardPage = () => {
           <Grid item xs={6} padding={1}>
             <Button
               variant="contained"
-              // onClick={() => handleTransferClick(row.original)}
+              onClick={() => handleEditClick(row.original.name)}
               size="small"
             >
               Edit
@@ -189,63 +196,17 @@ const DestinationDashboardPage = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateClose}>Cancel</Button>
-          <Button onClick={handleCreateDestination}>Create</Button>
+          <Button onClick={() => setIsDialogOpenEdit(false)}>Cancel</Button>
+          <Button onClick={handleTransfer}>Edit</Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={isDialogOpenDelete} onClose={handleDeleteClose}>
-        <DialogTitle>Confirm Delete Destination?</DialogTitle>
-        <DialogContent>
-          <Button
-            variant="contained"
-            // onClick={() => handleTransferClick(row.original)}
-            size="small"
-          >
-            Delete
-          </Button>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteClose}>Cancel</Button>
-          <Button onClick={handleTransfer}>Delete</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={openSnackbarEdit}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarEdit(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarEdit(false)} severity="success" sx={{ width: '100%' }}>
-          Edited successfully!
+      {/* <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }} sx={{ zIndex: theme => theme.zIndex.tooltip }}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+          Transfer successfully!
         </Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSnackbarDelete}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarDelete(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarDelete(false)} severity="success" sx={{ width: '100%' }}>
-          Deleted successfully!
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSnackbarCreate}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarCreate(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarCreate(false)} severity="success" sx={{ width: '100%' }}>
-          Created successfully!
-        </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </Grid>
-  );
-};
+  )
+}
 
 export default DestinationDashboardPage;
