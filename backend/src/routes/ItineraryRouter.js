@@ -96,4 +96,25 @@ router.delete('/', (req, res) => {
     });
 })
 
+router.post('/itinerarydb', (req, res) => {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "password",
+        database: 'techtrek24'
+    });
+
+    con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected to DB")
+        con.query(`INSERT INTO itinerary_destination (destination_id, itinerary_id) VALUES (${req.body['destination_id']}, ${req.body['itinerary_id']}) `, function (err, db_itineraries) {
+            if (err) console.log(err);
+            console.log(db_itineraries);
+            res.send(`Itinerary updated in DB`);
+            
+            con.end();
+        })
+    });
+})
+
 module.exports = router;
