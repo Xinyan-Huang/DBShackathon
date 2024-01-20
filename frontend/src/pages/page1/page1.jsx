@@ -24,7 +24,11 @@ const DestinationDashboardPage = () => {
   // Function to fetch DestinationDashboardPage data
 
   useEffect(() => {
-    axios.get("http://localhost:5001/destination").then((res) => {
+    axios.get("http://localhost:5001/destination", {
+      headers: {
+        Authorization: `Bearer ${jwtToken}` // Assuming a Bearer token, modify as needed
+      }
+    }).then((res) => {
       setDestinationResult(res.data);
     })
   }, [])
