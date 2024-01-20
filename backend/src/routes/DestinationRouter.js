@@ -15,7 +15,22 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get('/:country_id', async (req, res) => {
+router.get('/:id', async (req, res) => {
+  try {
+    db.query(
+      `SELECT * FROM destination WHERE id=${req.params['id']}`,
+      function (err, destination) {
+        if (err) console.log(err);
+        console.log(destination);
+        return res.status(200).json(destination);
+      },
+    );
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.get('/country/:country_id', async (req, res) => {
   try {
     db.query(
       `SELECT * FROM destination WHERE country_id=${req.params['country_id']}`,
