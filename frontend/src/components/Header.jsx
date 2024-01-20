@@ -51,12 +51,11 @@ const Header = () => {
   return (
     <header style={headerStyle} onMouseEnter={() => setIsExpanded(true)} onMouseLeave={() => setIsExpanded(false)}>
       <nav style={navStyle}>
-        {renderLink('/account', AccountBoxIcon, 'Account')}
-        {renderLink('/destination', HomeIcon, 'Destination')}
-        {renderLink('/page2', InfoIcon, 'Page 2')}
-        {renderLink('/page3', ContactMailIcon, 'Page 3')}
-        {renderLink('/logout', LogoutIcon, 'Logout')}
+
+        {renderLink('/itinerary', DashboardIcon, 'Itinerary')}
+        {renderLink('/destination', AddLocationIcon, 'Destination')}
         {/* Add other navigation links as needed */}
+        {renderLink('/logout', LogoutIcon, 'Logout')}
       </nav>
     </header>
   );
