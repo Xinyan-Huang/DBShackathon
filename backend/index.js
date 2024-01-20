@@ -7,6 +7,7 @@ app.use(express.json());
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const mysql = require("mysql");
+const itineraryRoutes = require('./src/routes/ItineraryRouter')
 
 //authentication
 function authenticate(req, res, next) {
@@ -24,6 +25,8 @@ function authenticate(req, res, next) {
 }
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
+
+app.use('/itinerary', itineraryRoutes)
 
 //Backend Listens to port 5001, your axios calls should be localhost:5001
 app.listen(5001, () => console.log("Server up and running... on port 5001"));
