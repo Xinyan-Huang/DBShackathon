@@ -5,6 +5,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { Box } from '@mui/material';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Header = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -48,10 +50,8 @@ const Header = () => {
   return (
     <header style={headerStyle} onMouseEnter={() => setIsExpanded(true)} onMouseLeave={() => setIsExpanded(false)}>
       <nav style={navStyle}>
-        {renderLink('/account', AccountBoxIcon, 'Account')}
-        {renderLink('/page1', HomeIcon, 'Page 1')}
-        {renderLink('/page2', InfoIcon, 'Page 2')}
-        {renderLink('/page3', ContactMailIcon, 'Page 3')}
+        {renderLink('/page1', DashboardIcon, 'Page 1')}
+        {renderLink('/page2', AddLocationIcon, 'Page 2')}
         {/* Add other navigation links as needed */}
       </nav>
     </header>
