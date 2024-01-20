@@ -16,7 +16,7 @@ router.get('/getItinerary', (req, res) => {
 
         console.log("Connected to DB")
 
-        con.query('SELECT * FROM itinerary', function (err, db_itineraries) {
+        con.query(`SELECT * FROM itinerary WHERE id=${req.body['id']}`, function (err, db_itineraries) {
             if (err) console.log(err);
             console.log(db_itineraries)
             res.send(db_itineraries)
