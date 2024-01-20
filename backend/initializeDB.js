@@ -1,5 +1,6 @@
 const mysql = require("mysql");
 const db = require("./db");
+const bcrypt = require('bcryptjs');
 
 const setupTable = async (dropQuery, createQuery) => {
     await new Promise((resolve, reject) => {
@@ -28,70 +29,102 @@ const setupDb = async () => {
     try {
         // Setup tables
         await setupTable(
-            `DROP TABLE IF EXISTS users;`,
-            `CREATE TABLE users (
-                userId INT(11) NOT NULL AUTO_INCREMENT,
-                name VARCHAR(255),
-                email VARCHAR(255) NOT NULL UNIQUE,
-                password VARCHAR(255),
-                PRIMARY KEY (userId)
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
+            `DROP TABLE IF EXISTS country;`,
+            `CREATE TABLE country (
+                id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                name varchar(50) NOT NULL,
+                KEY PK (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`
         );
         await setupTable(
-            `DROP TABLE IF EXISTS accounts;`,
-            `CREATE TABLE accounts (
-                accountType varchar(255) NOT NULL,
-                accountNumber VARCHAR(10) NOT NULL UNIQUE,
-                balance DECIMAL(10, 2) NOT NULL,
-                userId INT NOT NULL,
-                PRIMARY KEY (accountNumber)
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
+            `DROP TABLE IF EXISTS user;`,
+            `CREATE TABLE user (
+                id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                first_name varchar(50) NOT NULL,
+                last_name varchar(50) NOT NULL,
+                password varchar(255) NOT NULL,
+                username varchar(20) NOT NULL,
+                KEY PK (id)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`
         );
         await setupTable(
-            `DROP TABLE IF EXISTS dashboard;`,
-            `CREATE TABLE dashboard (
-                recordId INT(11) NOT NULL AUTO_INCREMENT,
-                email VARCHAR(255) NOT NULL,
-                item1 FLOAT DEFAULT NULL,
-                item2 FLOAT DEFAULT NULL,
-                item3 FLOAT DEFAULT NULL,
-                item4 FLOAT DEFAULT NULL,
-                userId INT NOT NULL,
-                PRIMARY KEY (recordId)
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
+            `DROP TABLE IF EXISTS destination;`,
+            `CREATE TABLE destination (
+                id INT(10) unsigned NOT NULL AUTO_INCREMENT,
+                country_id int(10) unsigned NOT NULL,
+                cost float NOT NULL DEFAULT 0,
+                name varchar(50) NOT NULL,
+                notes mediumtext DEFAULT NULL,
+                KEY PK (id),
+                KEY DestinationCountryFK (country_id),
+                CONSTRAINT DestinationCountryFK FOREIGN KEY (country_id) REFERENCES country (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`
         );
-
         await setupTable(
-            `DROP TABLE IF EXISTS data;`,
-            `CREATE TABLE data (
-                id int(11) NOT NULL,
-                name varchar(255) DEFAULT NULL,
-                item varchar(255) DEFAULT NULL
-            ) ENGINE=InnoDB DEFAULT CHARSET=latin1;`
+            `DROP TABLE IF EXISTS itinerary;`,
+            `CREATE TABLE itinerary (
+                id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                country_id int(10) unsigned NOT NULL DEFAULT 0,
+                user_id int(10) unsigned NOT NULL DEFAULT 0,
+                budget float unsigned NOT NULL DEFAULT 0,
+                title varchar(100) NOT NULL DEFAULT '0',
+                KEY PK (id),
+                KEY ItineraryCountryFK (country_id),
+                KEY ItineraryUserFK (user_id),
+                CONSTRAINT ItineraryCountryFK FOREIGN KEY (country_id) REFERENCES country (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT ItineraryUserFK FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`
+        );
+        await setupTable(
+            `DROP TABLE IF EXISTS itinerary_destination;`,
+            `CREATE TABLE itinerary_destination (
+                id int(10) unsigned NOT NULL AUTO_INCREMENT,
+                destination_id int(10) unsigned NOT NULL DEFAULT 0,
+                itineray_id int(10) unsigned NOT NULL DEFAULT 0,
+                KEY PK (id),
+                KEY IDDestinationFK (destination_id),
+                KEY IDItineraryFK (itineray_id),
+                CONSTRAINT IDDestinationFK FOREIGN KEY (destination_id) REFERENCES destination (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+                CONSTRAINT IDItineraryFK FOREIGN KEY (itineray_id) REFERENCES itinerary (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`
         );
 
         // Insert into tables
-        await insertIntoTable(`INSERT INTO users (name, email, password) VALUES ?`, [
-            ["user1", "user@example.com", "password"],
-            ["xinyan", "xinyan@example.com", "password"],
-        ]);
-        await insertIntoTable(`INSERT INTO accounts (accountType, accountNumber, balance, UserId) VALUES ?`, [
-            ["Savings Account", "0123456789", 1000.00, 3],
-            ["Current Account", "9876543210", 1000.00, 3],
-            ["Investment Account", "9876543212", 1000.00, 3],
+        await insertIntoTable(`INSERT INTO country (id, name) VALUES ?`, [
+            [1, "Singapore"]
         ]);
         await insertIntoTable(
-            `INSERT INTO dashboard (email, item1, item2, item3, item4, userId) VALUES ?`,
+            `INSERT INTO user (id, first_name, last_name, password, username) VALUES ?`,
             [
-                ["user@example.com", 1.1, 2.2, 3.3, 4.4,3],
-                ["user@example.com", 5.5, 6.6, 7.7, 8.8,3],
+                [1, 'John', 'Doe', await bcrypt.hash('johndoe123', 10), 'johndoe'],
+                [2, 'Emily', 'Smith', await bcrypt.hash('emilysmith456', 10), 'emilysmith'],
+                [3, 'David', 'Brown', await bcrypt.hash('davidbrown789', 10), 'davidbrown']
+            ]
+        )
+        await insertIntoTable(`INSERT INTO destination (id, country_id, cost, name, notes) VALUES ?`, [
+            [1, 1, 50, 'Marina Bay Sands', 'Iconic hotel with an infinity pool and stunning views of the city skyline. Open 24/7.'],
+            [2, 1, 30, 'Gardens by the Bay', 'Futuristic park featuring Supertree Grove and Flower Dome conservatories. Open daily from 9 AM to 9 PM.'],
+            [3, 1, 40, 'Sentosa Island', 'Fun-filled island resort with beaches, theme parks, and various attractions. Open daily from 10 AM to 7 PM.'],
+            [4, 1, 60, 'Universal Studios Singapore', 'Amusement park with movie-themed rides and entertainment. Open daily from 10 AM to 7 PM.'],
+            [5, 1, 35, 'Singapore Zoo', 'Award-winning zoo showcasing diverse wildlife species. Open daily from 8:30 AM to 6 PM.']
+        ]);
+        await insertIntoTable(
+            `INSERT INTO itinerary (id, country_id, user_id, budget, title) VALUES ?`,
+            [
+                [1, 1, 1, 500, 'Sightseeing in Singapore'],
+                [2, 1, 1, 800, 'Singapore Adventure'],
+                [3, 1, 2, 600, 'Exploring Singapore']
             ]
         );
         await insertIntoTable(
-            `INSERT INTO data (id, name, item) VALUES ?`,
+            `INSERT INTO itinerary_destination (id, destination_id, itineray_id) VALUES ?`,
             [
-                [1, "Item1", "Description1"],
-                [2, "Item2", "Description2"],
+                [1, 1, 1],
+                [2, 2, 1],
+                [3, 3, 1],
+                [4, 4, 2],
+                [5, 5, 2],
+                [6, 2, 3]
             ]
         )
 
