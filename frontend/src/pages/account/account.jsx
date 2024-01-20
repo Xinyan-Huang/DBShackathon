@@ -5,7 +5,6 @@ import axios from "axios"
 import { Snackbar, Alert } from "@mui/material"
 import { useAuth } from "../../Auth"
 import { backgroundImage, loginImage } from "../image"
-import { styled } from "@mui/system"
 const Account = () => {
   const jwtToken = useAuth()
   const [accounts, setAccounts] = useState([])
@@ -70,30 +69,17 @@ const Account = () => {
 
   const columns = [
     {
-      accessorKey: "accountType",
+      accessorKey: "title",
       header: "Title"
     },
     {
-      accessorKey: "accountNumber",
+      accessorKey: "budget",
       header: "Budget"
     },
     {
-      accessorKey: "balance",
+      accessorKey: "country_id",
       header: "Country Name"
     },
-    {
-      accessorKey: "balance",
-      header: "Destination"
-    },
-    // {
-    //   id: "actions",
-    //   header: "",
-    //   Cell: ({ row }) => (
-    //     <Button variant="contained" onClick={() => handleTransferClick(row.original)} size="small">
-    //       Edit
-    //     </Button>
-    //   )
-    // },
     {
       id: "actions",
       header: "",
@@ -166,8 +152,8 @@ const Account = () => {
               <FormControl fullWidth margin="dense">
                 <InputLabel id="group-select-label-${appData.username}">Choose Country</InputLabel>
                 <Select labelId="group-select-label-${appData.username}" name="App_permit_Open" value={transferData.receiverAccount || ""}>
-                  {/* {Array.isArray(groupOptions) &&
-                        groupOptions.map(opt => (
+                  {/* {Array.isArray(countryOptions) &&
+                        countryOptions.map(opt => (
                           <MenuItem key={opt} value={opt}>
                             {opt}
                           </MenuItem>
