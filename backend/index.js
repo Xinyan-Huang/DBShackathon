@@ -8,8 +8,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mysql = require("mysql");
 const dbroutes = require("./src/routes/Dashboard.js");
-const itineraryRoutes = require('./src/routes/ItineraryRouter')
-const loginroute = require("./src/routes/LoginRouter")
+const itineraryRoutes = require("./src/routes/ItineraryRouter");
+const loginroute = require("./src/routes/LoginRouter");
 
 //authentication
 function authenticate(req, res, next) {
@@ -30,7 +30,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(cookieParser());
 
 app.use("/db", dbroutes);
-app.use('/itinerary', itineraryRoutes)
+app.use("/itinerary", itineraryRoutes);
 app.use("/login", loginroute);
 
 //Backend Listens to port 5001, your axios calls should be localhost:5001
