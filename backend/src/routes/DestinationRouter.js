@@ -1,4 +1,6 @@
 const express = require('express');
+const { authenticate } = require('../../generateAccessToken')
+
 const router = express.Router();
 
 const db = require('../../db');
@@ -15,10 +17,10 @@ const db = require('../../db');
 //   }
 // });
 
-router.get('/', async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
   try {
     db.query(
-      `SELECT d.id, d.cost, d.name, d.notes FROM itinerary i INNER JOIN itinerary_destination id ON id.itinerary_id = i.id INNER JOIN destination d ON id.destination_id = d.id WHERE i.user_id = ${req.body['userId']};`,
+      `SELECT d.country_id, d.cost, d.name, d.notes FROM itinerary i INNER JOIN itinerary_destination id ON id.itinerary_id = i.id INNER JOIN destination d ON id.destination_id = d.id WHERE i.user_id = ${req.body['userId']};`,
       function (err, destination) {
         if (err) console.log(err);
         console.log(destination);
@@ -45,10 +47,10 @@ router.get('/country/:country_id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
   try {
     db.query(
-      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['cost']}, '${req.body['name']}', '${req.body['notes']}')`,
+      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['countryId']}, ${req.body['cost']}, '${req.body['name']}', '${req.body['notes']}')`,
       function (err, dest) {
         if (err) console.log(err);
         console.log(dest);
@@ -60,10 +62,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticate, async (req, res) => {
   try {
     db.query(
-      `UPDATE destination SET country_id = ${req.body['country_id']}, cost = ${req.body['cost']}, name = ${req.body['name']}, notes = '${req.body['notes']}' WHERE id=${req.params['id']}`,
+      `UPDATE destination SET country_id = ${req.body['countryId']}, cost = ${req.body['cost']}, name = '${req.body['name']}', notes = '${req.body['notes']}' WHERE id=${req.params['id']}`,
       function (err, dest) {
         if (err) console.log(err);
         console.log(dest);
@@ -75,7 +77,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticate, async (req, res) => {
   try {
     db.query(
       `DELETE FROM destination WHERE id=${req.params['id']}`,

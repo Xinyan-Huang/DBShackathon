@@ -12,7 +12,7 @@ router.get('/', authenticate, (req, res) => {
     });
 })
 
-router.post('/', (req, res) => {
+router.post('/', authenticate, (req, res) => {
     console.log(req.body['user'])
 
     db.query(`INSERT INTO itinerary (country_id, user_id, budget, title) VALUES (${req.body['countryId']}, ${req.body['userId']}, ${req.body['budget']}, '${req.body['title']}')`, 
@@ -23,7 +23,7 @@ router.post('/', (req, res) => {
     });
 })
 
-router.put('/', (req, res) => {
+router.put('/', authenticate, (req, res) => {
     db.query(`UPDATE itinerary SET country_id = ${req.body['country_id']}, user_id = ${req.body['user_id']}, budget = ${req.body['budget']}, title = '${req.body['title']}' WHERE id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries);
@@ -31,7 +31,7 @@ router.put('/', (req, res) => {
     });
 })
 
-router.delete('/', (req, res) => {
+router.delete('/', authenticate, (req, res) => {
     db.query(`DELETE FROM itinerary_destination WHERE itinerary_id=${req.body['itineraryId']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries);
