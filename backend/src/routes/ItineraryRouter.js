@@ -1,9 +1,10 @@
 const express = require('express');
 const db = require('../../db');
+const { authenticate } = require('../../generateAccessToken')
 
 const router = express.Router();
 
-router.get('/getItinerary', (req, res) => {
+router.get('/getItinerary', authenticate, (req, res) => {
     db.query(`SELECT * FROM itinerary WHERE id=${req.body['id']}`, function (err, db_itineraries) {
         if (err) console.log(err);
         console.log(db_itineraries)
