@@ -6,6 +6,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Box } from '@mui/material';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Header = () => {
   const [isExpanded, setIsExpanded] = useState(false);
