@@ -48,7 +48,7 @@ router.get('/country/:country_id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     db.query(
-      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['cost']}, '${req.body['name']}', '${req.body['notes']}')`,
+      `INSERT INTO destination (country_id, cost, name, notes) VALUES (${req.body['country_id']}, ${req.body['budget']}, '${req.body['name']}', '${req.body['notes']}')`,
       function (err, dest) {
         if (err) console.log(err);
         console.log(dest);

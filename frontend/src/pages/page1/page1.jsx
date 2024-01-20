@@ -17,7 +17,7 @@ const DestinationDashboardPage = () => {
   const [openDelete, setOpenDelete] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openCreate, setOpenCreate] = useState(false);
-  const [createDestination, setCreateDestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
+  const [createDestination, setCreateDestination] = useState({ country_id: '', name: '', budget: 0, notes: '' });
   const [editDestination, setEditDestination] = useState({ countryId: '', name: '', budget: 0, notes: '' });
   const [destinationResult, setDestinationResult] = useState([]);
 
@@ -29,8 +29,19 @@ const DestinationDashboardPage = () => {
     })
   }, [])
 
-  const handleCreateDestination = () => {
-    console.log("zxc");
+  const handleCreateDestination = async () => {
+    console.log(createDestination)
+    await axios.post("http://localhost:5001/destination", createDestination).then((res) => {
+      console.log(res);
+    })
+  }
+
+  const handleDeleteDestination = (id) => {
+    console.log(id)
+    axios.delete(`http://localhost:5001/destination/${id}`).then((res) => {
+      console.log(res);
+      
+    })
   }
 
   const handleTransfer = () => {
@@ -49,9 +60,18 @@ const DestinationDashboardPage = () => {
   };
 
   const handleCreateClose = () => {
-    setIsDialogOpenCreate(false);
+    
+    setOpenCreate(false);
     setError('');
   };
+
+  const handleCreate = () => {
+    // axios.post("http://localhost:5001/destination", ).then((res) => {
+    //   setDestinationResult(res.data);
+    // })
+    setOpenCreate(true)
+    setError('');
+  }
 
   const columns = [
     {
@@ -74,7 +94,7 @@ const DestinationDashboardPage = () => {
           <Grid item xs={6} padding={1}>
             <Button
               variant="contained"
-              // onClick={() => handleTransferClick(row.original)}
+              onClick={() => handleDeleteDestination(row.original.id)}
               size="small"
             >
               Delete
@@ -115,7 +135,7 @@ const DestinationDashboardPage = () => {
                   Destination
                 </Typography>
               </Box>
-              <Button onClick={() => setOpenCreate(true)}>
+              <Button onClick={() => handleCreate()}>
                 Create new destination
               </Button>
             </Grid>
@@ -123,19 +143,19 @@ const DestinationDashboardPage = () => {
         />
       </Grid>
 
-      <Dialog open={isDialogOpenCreate} onClose={handleCreateClose}>
+      <Dialog open={openCreate} onClose={handleCreateClose}>
         <DialogTitle>Create Destination</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            id="countryId"
+            id="country_id"
             label="Country ID"
             type="text"
             fullWidth
             variant="outlined"
             value={createDestination.countryId}
-            onChange={(e) => setCreateDestination({ ...createDestination, countryId: e.target.value })}
+            onChange={(e) => setCreateDestination({ ...createDestination, country_id: e.target.value })}
           />
           <TextField
             margin="dense"
