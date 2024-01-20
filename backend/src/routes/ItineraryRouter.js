@@ -3,7 +3,7 @@ const mysql = require('mysql');
 
 const router = express.Router();
 
-router.get('/getItinerary', (req, res) => {
+router.get('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -26,7 +26,7 @@ router.get('/getItinerary', (req, res) => {
     });
 })
 
-router.post('/addItinerary', (req, res) => {
+router.post('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -49,7 +49,7 @@ router.post('/addItinerary', (req, res) => {
     });
 })
 
-router.put('/updateItinerary', (req, res) => {
+router.put('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
@@ -70,7 +70,7 @@ router.put('/updateItinerary', (req, res) => {
     });
 })
 
-router.delete('/deleteItinerary', (req, res) => {
+router.delete('/', (req, res) => {
     var con = mysql.createConnection({
         host: "localhost",
         user: "root",
