@@ -9,6 +9,7 @@ import Page3 from './pages/page3/page3';
 import Header from './components/Header';
 import ProtectedRoute from './pages/protectedRoute';
 import Title from './components/Title';
+import Dashboard from './pages/dashboard/dashboard'
 
 function App() {
   const Layout = () => {
@@ -33,10 +34,12 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate replace to="/login" />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
-            <Route path="/page1" element={<ProtectedRoute><Page1 /></ProtectedRoute>} />
-            <Route path="/page2" element={<ProtectedRoute><Page2 /></ProtectedRoute>} />
-            <Route path="/page3" element={<ProtectedRoute><Page3 /></ProtectedRoute>} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/page1" element={<Page1 />} />
+            <Route path="/page2" element={<Page2 />} />
+            <Route path="/page3" element={<Page3 />} />
+            <Route path="/dashboard" element={<Dashboard/>} />
+
             {/* Other routes here */}
           </Routes>
         </div>
