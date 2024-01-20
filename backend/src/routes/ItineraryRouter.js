@@ -8,7 +8,7 @@ router.get('/getItinerary', (req, res) => {
         host: "localhost",
         user: "root",
         password: "password",
-        database: 'techtrek'
+        database: 'techtrek24'
     });
     
     con.connect(function(err) {
@@ -31,7 +31,7 @@ router.post('/addItinerary', (req, res) => {
         host: "localhost",
         user: "root",
         password: "password",
-        database: 'techtrek'
+        database: 'techtrek24'
     });
 
     console.log(req.body['user'])
@@ -54,7 +54,7 @@ router.put('/updateItinerary', (req, res) => {
         host: "localhost",
         user: "root",
         password: "password",
-        database: 'techtrek'
+        database: 'techtrek24'
     });
 
     con.connect(function(err) {
@@ -64,6 +64,32 @@ router.put('/updateItinerary', (req, res) => {
             if (err) console.log(err);
             console.log(db_itineraries);
             res.send(`Itinerary updated in DB`);
+            
+            con.end();
+        })
+    });
+})
+
+router.delete('/deleteItinerary', (req, res) => {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "password",
+        database: 'techtrek24'
+    });
+
+    con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected to DB")
+        con.query(`DELETE FROM itinerary_destination WHERE itinerary_id=${req.body['id']}`, function (err, db_itineraries) {
+            if (err) console.log(err);
+            console.log(db_itineraries);
+        })
+
+        con.query(`DELETE FROM itinerary WHERE id=${req.body['id']}`, function (err, db_itineraries) {
+            if (err) console.log(err);
+            console.log(db_itineraries);
+            res.send(`Itinerary deleted in DB`);
             
             con.end();
         })
