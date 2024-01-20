@@ -15,22 +15,7 @@ const Account = () => {
   const [title, setTitle] = useState('');
   const [country, setCountry] = useState('');
   const [budget, setBudget] = useState(0);
-  const [destination, setDestination] = useState([]);
   const [itinerary, setItinerary] = useState({userId: '', title:'', countryId:'', budget: 0, destinationId:[]});
-  const [destinationChoices, setDestinationChoices] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState('');
-
-
-  const countryList = [
-    {id:1, name:"Singapore"},
-    {id:2, name:"Hong Kong"}
-  ];
-
-  let countryName = '';
-
-  // countryList.forEach(element => {
-  //   console.log(element.name);
-  // });
 
   // Function to fetch account data
   const fetchAccounts = async () => {
@@ -57,15 +42,6 @@ const Account = () => {
   //   setIsDialogOpen(true);
   // };
 
-  const handleSelectedCountry = (event) => {
-    setSelectedCountry = (event.target.value);
-  }
-  const selectDestination = (country) => {
-    setCountry(country.value);
-    console.log(country);
-    // const response = await axios.get('http://localhost:5001/destination/countryId')
-  }
-
   const handleTransfer = async () => {
     try {
       console.log(transferData)
@@ -84,10 +60,10 @@ const Account = () => {
         }, 3000);
         fetchAccounts();
       } else {
-        setError('Transfer failed');
+        setError('Creation failed');
       }
     } catch (error) {
-      setError('Transfer failed: ' + error.message);
+      setError('Creation failed: ' + error.message);
     }
   };
 
@@ -95,7 +71,6 @@ const Account = () => {
     setIsDialogOpen(false);
     setError('');
   };
-
 
   useEffect(() => {
     fetchAccounts();
@@ -165,7 +140,7 @@ const Account = () => {
             type="text"
             fullWidth
             variant="outlined"
-            value={transferData.receiverAccount}
+            value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
           <TextField
