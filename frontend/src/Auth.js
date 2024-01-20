@@ -18,6 +18,7 @@ const AuthProvider = ({ children }) => {
 
   const logout = useCallback(() => {
     localStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('jwtToken');
     setJwtToken(null);
   }, []);
 

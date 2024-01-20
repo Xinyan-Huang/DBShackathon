@@ -7,13 +7,17 @@ function generateAccessToken(user) {
 function authenticate(req, res, next) {
   const auth = req.headers.authorization;
   const token = auth && auth.split(" ")[1];
+  console.log(token);
+  console.log(auth);
   if (token == null) return res.sendStatus(401);
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
     if (err) return res.sendStatus(403);
     req.user = user;
+    console.log(user, "user");
     next();
   });
 }
+
 module.exports = {
   generateAccessToken,
   authenticate,

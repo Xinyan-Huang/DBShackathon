@@ -14,15 +14,16 @@ const Login = () => {
   const jwtToken = useAuth();
   const [thisState, setThisState] = useState(false);
   //Set hooks for login:
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorLogin, setErrorLogin] = useState("");
   //Set hooks for sign up:
   const [isSignUpDialogOpen, setIsSignUpDialogOpen] = useState(false);
-  const [signUpName, setSignUpName] = useState("");
+  const [signUpFirstName, setSignUpFirstName] = useState("");
+  const [signUpUsername, setSignupUsername] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpLastName, setSignUpLastName] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState("");
   const [errorSignUp, setErrorSignUp] = useState("");
@@ -37,23 +38,23 @@ const Login = () => {
 
   //Login function
   const signIn = async () => {
-    console.log("email:", email);
+    console.log("username:", username);
     console.log("password:", password);
     try {
-      const response = await axios.post("http://localhost:5001/verifyUser", {
-        email: email,
+      const response = await axios.post("http://localhost:5001/login", {
+        username: username,
         password: password,
       });
-      console.log("response,", response.request.status);
       console.log(response);
-      console.log("successful verification");
-      localStorage.setItem('jwtToken', response.data.token);
+      // localStorage.setItem('jwtToken', response.data.token);  // Only use for if remember me is selected.
+      sessionStorage.setItem('jwtToken', response.data.token);
       setJwtToken(response.data.token);
       console.log(jwtToken);
       setErrorLogin("");
+      console.log("navigating..")
       navigate("/account");
     } catch (error) {
-      setErrorLogin("Email or Password incorrect");
+      setErrorLogin("username or Password incorrect");
       console.log(error);
     }
   };
@@ -67,9 +68,10 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5001/createUser", {
-        name: signUpName,
-        email: signUpEmail,
+      const response = await axios.post("http://localhost:5001/login/newUser", {
+        firstName: signUpFirstName,
+        lastName: signUpLastName,
+        username: signUpLastName,
         password: signUpPassword,
       });
 
@@ -78,11 +80,10 @@ const Login = () => {
         setOpenSnackbar(true);
         toggleSignUpDialog()
         setSignUpConfirmPassword("")
-        setSignUpEmail("")
         setSignUpPassword("")
-        setSignUpName("")
+        setSignUpFirstName("")
+        setSignUpLastName("")
         setErrorSignUp("")
-        console.log("Snackbar should now be open");
 
         setTimeout(() => {
           setOpenSnackbar(false); // Optionally hide alert after some time
@@ -131,10 +132,10 @@ const Login = () => {
           <Grid item xs={12}>
             <TextField
               fullWidth
-              label="Email Address"
+              label="Username"
               variant="outlined"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -186,18 +187,25 @@ const Login = () => {
         <DialogContent>
           {/* Sign-up form fields */}
           <TextField
-            label="Name"
+            label="First Name"
             fullWidth
             margin="normal"
-            value={signUpName}
-            onChange={(e) => setSignUpName(e.target.value)}
+            value={signUpFirstName}
+            onChange={(e) => setSignUpFirstName(e.target.value)}
           />
           <TextField
-            label="Email"
+            label="Last Name"
             fullWidth
             margin="normal"
-            value={signUpEmail}
-            onChange={(e) => setSignUpEmail(e.target.value)}
+            value={signUpLastName}
+            onChange={(e) => setSignUpLastName(e.target.value)}
+          />
+          <TextField
+            label="Username"
+            fullWidth
+            margin="normal"
+            value={signUpUsername}
+            onChange={(e) => setSignupUsername(e.target.value)}
           />
           <TextField
             label="Password"

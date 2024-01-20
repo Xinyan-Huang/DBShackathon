@@ -4,6 +4,7 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox'; // Import icons
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { Box } from '@mui/material';
 
 const Header = () => {
@@ -17,8 +18,8 @@ const Header = () => {
     top: 0,
     left: 0,
     zIndex: 1000,
-    width: isExpanded ? '200px' : '50px', 
-    transition: 'width 0.3s', 
+    width: isExpanded ? '200px' : '50px',
+    transition: 'width 0.3s',
   };
 
   const navStyle = {
@@ -49,9 +50,10 @@ const Header = () => {
     <header style={headerStyle} onMouseEnter={() => setIsExpanded(true)} onMouseLeave={() => setIsExpanded(false)}>
       <nav style={navStyle}>
         {renderLink('/account', AccountBoxIcon, 'Account')}
-        {renderLink('/page1', HomeIcon, 'Page 1')}
+        {renderLink('/destination', HomeIcon, 'Destination')}
         {renderLink('/page2', InfoIcon, 'Page 2')}
         {renderLink('/page3', ContactMailIcon, 'Page 3')}
+        {renderLink('/logout', LogoutIcon, 'Logout')}
         {/* Add other navigation links as needed */}
       </nav>
     </header>
