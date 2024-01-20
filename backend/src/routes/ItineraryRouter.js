@@ -26,4 +26,29 @@ router.get('/getItinerary', (req, res) => {
     });
 })
 
+router.post('/addItinerary', (req, res) => {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "password",
+        database: 'techtrek'
+    });
+
+    console.log(req.body['user'])
+
+    con.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected to DB")
+        con.query(`INSERT INTO itinerary (country_id, user_id, budget, title) VALUES (${req.body['country_id']}, ${req.body['user_id']}, ${req.body['budget']}, '${req.body['title']}')`, function (err, db_itineraries) {
+            if (err) console.log(err);
+            console.log(db_itineraries);
+            res.send(`Itinerary added to DB`);
+            
+            con.end();
+        })
+    });
+
+    
+})
+
 module.exports = router;
