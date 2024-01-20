@@ -21,7 +21,7 @@ function authenticate(req, res, next) {
         req.user = user;
         console.log(user, "user");
         next();
-    });x
+    });
 }
 
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
