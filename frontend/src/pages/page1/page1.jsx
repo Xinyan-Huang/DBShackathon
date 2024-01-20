@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MaterialReactTable } from 'material-react-table';
-import { Grid, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { Grid, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, FormControl, InputLabel, Input } from "@mui/material"
 import axios from 'axios';
 import { Snackbar, Alert } from '@mui/material';
 import { useAuth } from '../../Auth';
@@ -43,6 +43,9 @@ const DestinationDashboardPage = () => {
     setError('');
   };
 
+  const handleEditClick = () => {
+    setIsDialogOpenEdit(true)
+  }
   const handleEditClose = () => {
     setIsDialogOpenEdit(false);
     setError('');
@@ -83,7 +86,7 @@ const DestinationDashboardPage = () => {
           <Grid item xs={6} padding={1}>
             <Button
               variant="contained"
-              // onClick={() => handleTransferClick(row.original)}
+              onClick={() => handleEditClick(row.original.name)}
               size="small"
             >
               Edit
@@ -122,110 +125,70 @@ const DestinationDashboardPage = () => {
           )}
         />
       </Grid>
-
-      <Dialog open={isDialogOpenCreate} onClose={handleCreateClose}>
-        <DialogTitle>Create Destination</DialogTitle>
+      <Dialog open={isDialogOpenEdit} onClose={() => setIsDialogOpenEdit(false)}>
+        <DialogTitle>Edit Destinations</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="countryId"
-            label="Country ID"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={createDestination.countryId}
-            onChange={(e) => setCreateDestination({ ...createDestination, countryId: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            id="name"
-            label="Destination Name"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={createDestination.name}
-            onChange={(e) => setCreateDestination({ ...createDestination, name: e.target.value })}
-          />
-          <TextField
-            margin="dense"
-            id="budget"
-            label="Budget"
-            type="number"
-            fullWidth
-            variant="outlined"
-            value={createDestination.budget}
-            onChange={(e) => setCreateDestination({ ...createDestination, budget: parseFloat(e.target.value) || 0 })}
-          />
-          <TextField
-            margin="dense"
-            id="notes"
-            label="Notes"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={createDestination.notes}
-            onChange={(e) => setCreateDestination({ ...createDestination, notes: e.target.value })}
-          />
+          <Grid container spacing={12}>
+            {/* Left column content */}
+            <Grid item xs={12} md={12} style={{ paddingRight: "32px" }}>
+              <TextField
+                autoFocus
+                margin="dense"
+                name="Country"
+                label="Country"
+                type="text"
+                fullWidth
+                style={{ marginBottom: "16px" }}
+                value={destinationResult.country_id}
+                disabled
+              // value={newAppData.App_Acronym}
+              />
+              <Input
+                margin="dense"
+                name="Destination_Name"
+                label="Destination Name"
+                type="number"
+                fullWidth
+                value={destinationResult.name}
+              // value={newAppData.App_Rnumber}
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel id="group-select-label-${destinationResult.name}">Choose Destination</InputLabel>
+                <Select labelId="group-select-label-${destinationResult.name}" name="App_permit_Open" value={destinationResult.country_id || ""}>
+                  {/* {Array.isArray(groupOptions) &&
+                        groupOptions.map(opt => (
+                          <MenuItem key={opt} value={opt}>
+                            {opt}
+                          </MenuItem>
+                        ))} */}
+                </Select>
+              </FormControl>
+              <TextField
+                margin="dense"
+                name="App_Description"
+                label="Notes"
+                type="text"
+                fullWidth
+                multiline
+                rows={4}
+                value={destinationResult.notes || ""}
+              // onChange={e => handleChange("App_Description", e.target.value)}
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateClose}>Cancel</Button>
-          <Button onClick={handleCreateDestination}>Create</Button>
+          <Button onClick={() => setIsDialogOpenEdit(false)}>Cancel</Button>
+          <Button onClick={handleTransfer}>Edit</Button>
         </DialogActions>
       </Dialog>
-
-      <Dialog open={isDialogOpenDelete} onClose={handleDeleteClose}>
-        <DialogTitle>Confirm Delete Destination?</DialogTitle>
-        <DialogContent>
-          <Button
-            variant="contained"
-            // onClick={() => handleTransferClick(row.original)}
-            size="small"
-          >
-            Delete
-          </Button>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteClose}>Cancel</Button>
-          <Button onClick={handleTransfer}>Delete</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={openSnackbarEdit}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarEdit(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarEdit(false)} severity="success" sx={{ width: '100%' }}>
-          Edited successfully!
+      {/* <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)} anchorOrigin={{ vertical: "top", horizontal: "center" }} sx={{ zIndex: theme => theme.zIndex.tooltip }}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+          Transfer successfully!
         </Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSnackbarDelete}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarDelete(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarDelete(false)} severity="success" sx={{ width: '100%' }}>
-          Deleted successfully!
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSnackbarCreate}
-        autoHideDuration={6000}
-        onClose={() => setOpenSnackbarCreate(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        sx={{ zIndex: theme => theme.zIndex.tooltip }}
-      >
-        <Alert onClose={() => setOpenSnackbarCreate(false)} severity="success" sx={{ width: '100%' }}>
-          Created successfully!
-        </Alert>
-      </Snackbar>
+      </Snackbar> */}
     </Grid>
-  );
-};
+  )
+}
 
 export default DestinationDashboardPage;
