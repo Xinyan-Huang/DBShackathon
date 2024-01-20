@@ -10,6 +10,7 @@ import Header from './components/Header';
 import ProtectedRoute from './pages/protectedRoute';
 import LogoutPage from './pages/logout/logout';
 import Title from './components/Title';
+import Dashboard from './pages/dashboard/dashboard'
 
 function App() {
   const Layout = () => {
