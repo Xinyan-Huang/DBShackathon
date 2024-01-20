@@ -15,7 +15,7 @@ app.use(cookieParser());
 app.use("/db", dbroutes);
 app.use('/itinerary', itineraryRoutes);
 app.use("/login", loginroute);
-app.use('/router/destination', destinationRouter);
+app.use('/destination', destinationRouter);
 
 //Backend Listens to port 5001, your axios calls should be localhost:5001
 app.listen(5001, () => console.log('Server up and running... on port 5001'));

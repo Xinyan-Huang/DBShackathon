@@ -3,22 +3,22 @@ const router = express.Router();
 
 const db = require('../../db');
 
+// router.get('/', async (req, res) => {
+//   try {
+//     db.query('SELECT * FROM destination', function (err, destinations) {
+//       if (err) console.log(err);
+//       console.log(destinations);
+//       return res.status(200).json(destinations);
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ error: error.message });
+//   }
+// });
+
 router.get('/', async (req, res) => {
   try {
-    db.query('SELECT * FROM destination', function (err, destinations) {
-      if (err) console.log(err);
-      console.log(destinations);
-      return res.status(200).json(destinations);
-    });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-});
-
-router.get('/:id', async (req, res) => {
-  try {
     db.query(
-      `SELECT * FROM destination WHERE id=${req.params['id']}`,
+      `SELECT d.id, d.cost, d.name, d.notes FROM itinerary i INNER JOIN itinerary_destination id ON id.itinerary_id = i.id INNER JOIN destination d ON id.destination_id = d.id WHERE i.user_id = ${req.body['userId']};`,
       function (err, destination) {
         if (err) console.log(err);
         console.log(destination);
